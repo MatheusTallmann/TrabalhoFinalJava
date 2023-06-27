@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class TrabalhoFinalJava 
 {
-
+    /* MÉTODO PRINCIPAL */
     public TrabalhoFinalJava() 
     {
         Scanner teclado = new Scanner(System.in);
@@ -12,10 +12,10 @@ public class TrabalhoFinalJava
         do 
         {
             System.out.println("Bem vindo ao Liga-4");
+            
+            DefinirTabuleiro(tabuleiro);
 
-            definirTabuleiro(tabuleiro);
-
-            char jogador = escolherCor(teclado);
+            char jogador = SelecionarCor(teclado);
             char computador;
             
             if(jogador == 'V') 
@@ -27,21 +27,22 @@ public class TrabalhoFinalJava
                 computador = 'V';
             }
 
-            imprimirTabuleiro(tabuleiro);
+            ImprimirTabuleiro(tabuleiro);
+            
             boolean vencedor = false;
             
             do 
             {
-                jogadaPessoa(teclado, tabuleiro, jogador);
-                vencedor = verificarVitória(tabuleiro, jogador, computador);
+                EfetuarJogada(teclado, tabuleiro, jogador);
+                vencedor = VerificarVitoria(tabuleiro, jogador, computador);
                 
                 if(vencedor == true) 
                 {
                     break;
                 }
 
-                jogadaComputador(jogador, tabuleiro, computador);
-                vencedor = verificarVitória(tabuleiro, jogador, computador);
+                EfetuarJogada(teclado, tabuleiro, computador);
+                vencedor = VerificarVitoria(tabuleiro, jogador, computador);
             } 
             while(vencedor == false);
 
@@ -52,18 +53,18 @@ public class TrabalhoFinalJava
         while(resposta == 'S');
     }
 
-    public void definirTabuleiro(char[][] tabuleiro) 
+    public void DefinirTabuleiro(char[][] tabuleiro) 
     {
         for (int y = 0; y < 6; y++) 
         {
             for (int w = 0; w < 7; w++) 
             {
-                tabuleiro[y][w] = 'B';
+                tabuleiro[y][w] = '.';
             }
         }
     }
 
-    public void imprimirTabuleiro(char[][] tabuleiro) 
+    public void ImprimirTabuleiro(char[][] tabuleiro) 
     {
         for (int x = 0; x < 6; x++) 
         {
@@ -76,34 +77,36 @@ public class TrabalhoFinalJava
                 System.out.print(tabuleiro[x][y] + " ");
             }
         }
-
+        System.out.println("\n-------------\n0 1 2 3 4 5 6");
         System.out.println();
     }
 
-    public char escolherCor(Scanner teclado) 
+    public char SelecionarCor(Scanner teclado) 
     {
         System.out.println("Escolha a cor V - Vermelho/ A - Azul");
-        char jogador = teclado.next().charAt(0);
+        char cor = teclado.next().charAt(0);
 
-        jogador = Character.toUpperCase(jogador);
+        cor = Character.toUpperCase(cor);
 
-        while (jogador != 'V' && jogador != 'A') 
+        while (cor != 'V' && cor != 'A') 
         {
             System.out.println("A cor não é válida, escolha V para vermelho ou A para azul");
-            jogador = teclado.next().charAt(0);
-            jogador = Character.toUpperCase(jogador);
+            cor = teclado.next().charAt(0);
+            cor = Character.toUpperCase(cor);
         
         } 
-        
-        return jogador;
+
+        System.out.println();
+
+        return cor;
     }
 
-    public int verificarEspaço(char[][] tabuleiro, int coluna) 
+    public int VerificarEspaco(char[][] tabuleiro, int coluna) 
     {
         int espaço = 0;
         for (int y = 0; y < 6; y++) 
         {
-            if (tabuleiro[y][coluna] != 'B') 
+            if (tabuleiro[y][coluna] != '.') 
             {
                 espaço = y - 1;
                 break;
@@ -117,10 +120,10 @@ public class TrabalhoFinalJava
         return espaço;
     }
 
-    public boolean verificarEspaçoOcupado(char[][] tabuleiro, int coluna) 
+    public boolean VerificaColunaPreenchida(char[][] tabuleiro, int coluna)
     {
         boolean espaçoOcupado = false;
-        if (tabuleiro[0][coluna] == 'B') 
+        if (tabuleiro[0][coluna] == '.') 
         {
             espaçoOcupado = false;
         } 
@@ -132,10 +135,10 @@ public class TrabalhoFinalJava
         return espaçoOcupado;
     }
 
-    public void jogadaPessoa(Scanner teclado, char[][] tabuleiro, char jogador) 
+    public void EfetuarJogada(Scanner teclado, char[][] tabuleiro, char jogador) 
     {
 
-        System.out.println("Escolha a coluna para fazer a jogada:");
+        System.out.println("Escolha um número de 0 a 6 para fazer uma jogada:");
 
         int coluna = teclado.nextInt();
         boolean jogadaValida = true;
@@ -148,7 +151,7 @@ public class TrabalhoFinalJava
                 coluna = teclado.nextInt();
             }
 
-            boolean espaçoOcupado = verificarEspaçoOcupado(tabuleiro, coluna);
+            boolean espaçoOcupado = VerificaColunaPreenchida(tabuleiro, coluna);
 
             if (espaçoOcupado == true) {
                 System.out.println("Não há espaço na coluna escolhida, escolha outra:");
@@ -161,14 +164,14 @@ public class TrabalhoFinalJava
         } 
         while (jogadaValida);
 
-        int espaço = verificarEspaço(tabuleiro, coluna);
+        int espaço = VerificarEspaco(tabuleiro, coluna);
 
         tabuleiro[espaço][coluna] = jogador;
-        imprimirTabuleiro(tabuleiro);
+        ImprimirTabuleiro(tabuleiro);
         System.out.println();
     }
 
-    public void jogadaComputador(int coluna, char[][] tabuleiro, char computador) 
+    public void EfetuarJogadaComputador(int coluna, char[][] tabuleiro, char computador) 
     {
 
         boolean espaçoOcupado = true;
@@ -179,25 +182,27 @@ public class TrabalhoFinalJava
 
             if(coluna <= 6) 
             {
-                espaçoOcupado = verificarEspaçoOcupado(tabuleiro, coluna);
+                espaçoOcupado = VerificaColunaPreenchida(tabuleiro, coluna);
             }
         } 
         while(coluna > 6 && espaçoOcupado == true);
 
-        int espaço = verificarEspaço(tabuleiro, coluna);
+        int espaço = VerificarEspaco(tabuleiro, coluna);
 
         tabuleiro[espaço][coluna] = computador;
 
-        imprimirTabuleiro(tabuleiro);
+        ImprimirTabuleiro(tabuleiro);
 
         System.out.println("Computador jogou na coluna " + coluna);
         System.out.println();
     }    
     
-    public boolean verificarVitória(char[][] tabuleiro, char jogador, char computador) 
+    
+
+    public boolean VerificarVitoria(char[][] tabuleiro, char jogador, char computador) 
     {
         boolean vencedor = true; 
-
+    
         for(int y = 0; y <= 5; y++) 
         {
             for(int w = 0; w <= 3; w++) 
@@ -220,7 +225,7 @@ public class TrabalhoFinalJava
                 }
             }
         }
-
+    
         for(int y = 0; y <= 6; y++) 
         {
             for(int w = 0; w <= 2; w++) 
@@ -242,9 +247,9 @@ public class TrabalhoFinalJava
                     vencedor = false;
                 }
             }
-
+    
         }
-
+    
         for(int y = 0; y < tabuleiro.length - 3; y++) 
         {
             for(int w = 0; w < tabuleiro[y].length - 3; w++) 
@@ -266,9 +271,9 @@ public class TrabalhoFinalJava
                     vencedor = false;
                 }
             }
-
+    
         }
-
+    
         for(int y = 0; y < tabuleiro.length - 3; y++) 
         {
             for(int w = 3; w < tabuleiro[y].length - 3; w++) 
@@ -291,13 +296,14 @@ public class TrabalhoFinalJava
                 }
             }
         } 
-
+    
         
         for(int y = 0; y <= 5; y++) 
         {
             for(int w = 0; w <= 6; w++) 
             {
-                if(tabuleiro[y][w] != 'B') 
+    
+                if(tabuleiro[y][w] != '.') 
                 {
                     vencedor = true;
                 }
@@ -308,16 +314,15 @@ public class TrabalhoFinalJava
                 }
             }
         }
-
+        
         if(vencedor == true) 
         {
             System.out.println("Empate!");
         } 
-
+        
         return vencedor;
-
+    
     }
-
         
 
     public static void main(String[] args) 
