@@ -11,7 +11,8 @@ public class TrabalhoFinalJava
 
         do 
         {
-            System.out.println("Bem vindo ao Liga-4");
+            System.out.println("Início do Jogo!");
+            System.out.println();
             
             DefinirTabuleiro(tabuleiro);
 
@@ -53,6 +54,7 @@ public class TrabalhoFinalJava
         while(resposta == 'S');
     }
 
+    /* Método de criação e alimentação da Matriz com valores "B" */
     public void DefinirTabuleiro(char[][] tabuleiro) 
     {
         for (int y = 0; y < 6; y++) 
@@ -64,6 +66,7 @@ public class TrabalhoFinalJava
         }
     }
 
+    /* Método de Impressão do Tabuleiro contendo a numeração das colunas */
     public void ImprimirTabuleiro(char[][] tabuleiro) 
     {
         for (int x = 0; x < 6; x++) 
@@ -81,26 +84,43 @@ public class TrabalhoFinalJava
         System.out.println();
     }
 
+    /* Métodos de seleção da cor para efetuar as jogadas */
     public char SelecionarCor(Scanner teclado) 
     {
-        System.out.println("Escolha a cor V - Vermelho/ A - Azul");
-        char cor = teclado.next().charAt(0);
+        System.out.println("Escolha a cor V - Vermelho/ A - Azul");        
+        char cor = ' ';
+        String input = teclado.next();              
 
+        cor = input.charAt(0);
         cor = Character.toUpperCase(cor);
 
-        while (cor != 'V' && cor != 'A') 
+        while((input.length() != 1) || (cor != 'V' && cor != 'A'))
         {
-            System.out.println("A cor não é válida, escolha V para vermelho ou A para azul");
-            cor = teclado.next().charAt(0);
+            while(input.length() != 1)
+            {
+                System.out.println("Por favor, insira somente 1 caracter, sendo V para vermelho ou A para azul");   
+                input = teclado.next();
+            }
+
+            cor = input.charAt(0);
             cor = Character.toUpperCase(cor);
-        
-        } 
+
+            while (cor != 'V' && cor != 'A') 
+            {
+                System.out.println("A cor não é válida, escolha V para vermelho ou A para azul");
+                input = teclado.next();
+
+                cor = input.charAt(0);
+                cor = Character.toUpperCase(cor);        
+            } 
+        }
 
         System.out.println();
 
         return cor;
     }
 
+    /* Método de validação de espaços vazios nas colunas */
     public int VerificarEspaco(char[][] tabuleiro, int coluna) 
     {
         int espaço = 0;
@@ -120,6 +140,7 @@ public class TrabalhoFinalJava
         return espaço;
     }
 
+    /* Método para verificar se determinada coluna já foi completamente preenchida */
     public boolean VerificaColunaPreenchida(char[][] tabuleiro, int coluna)
     {
         boolean espaçoOcupado = false;
@@ -135,6 +156,7 @@ public class TrabalhoFinalJava
         return espaçoOcupado;
     }
 
+    /* Método de ação da jogada */
     public void EfetuarJogada(Scanner teclado, char[][] tabuleiro, char jogador) 
     {
 
@@ -171,9 +193,9 @@ public class TrabalhoFinalJava
         System.out.println();
     }
 
+    /* Método de jogada do computador */
     public void EfetuarJogadaComputador(int coluna, char[][] tabuleiro, char computador) 
     {
-
         boolean espaçoOcupado = true;
         
         do 
@@ -196,13 +218,13 @@ public class TrabalhoFinalJava
         System.out.println("Computador jogou na coluna " + coluna);
         System.out.println();
     }    
-    
-    
 
+    /* Método de verificação de vitória */
     public boolean VerificarVitoria(char[][] tabuleiro, char jogador, char computador) 
     {
         boolean vencedor = true; 
     
+        /* Verificação de vitória na horizontal */
         for(int y = 0; y <= 5; y++) 
         {
             for(int w = 0; w <= 3; w++) 
@@ -226,6 +248,7 @@ public class TrabalhoFinalJava
             }
         }
     
+        /* Verificação de vitória na vertical */
         for(int y = 0; y <= 6; y++) 
         {
             for(int w = 0; w <= 2; w++) 
@@ -250,6 +273,7 @@ public class TrabalhoFinalJava
     
         }
     
+        /* Verificação de vitória na diagonal, da esquerda para a direita */
         for(int y = 0; y < tabuleiro.length - 3; y++) 
         {
             for(int w = 0; w < tabuleiro[y].length - 3; w++) 
@@ -274,6 +298,7 @@ public class TrabalhoFinalJava
     
         }
     
+        /* Verificação de vitória na diagonal, da direita para a esquerda */
         for(int y = 0; y < tabuleiro.length - 3; y++) 
         {
             for(int w = 3; w < tabuleiro[y].length - 3; w++) 
@@ -297,7 +322,8 @@ public class TrabalhoFinalJava
             }
         } 
     
-        
+        /* Caso não tenha vitória nas verificações acima, ele varre a matriz analisando se há espaços em branco.
+           Se não houver espaços em branco, ele retorna o empate! */
         for(int y = 0; y <= 5; y++) 
         {
             for(int w = 0; w <= 6; w++) 
