@@ -42,7 +42,7 @@ public class TrabalhoFinalJava
                     break;
                 }
 
-                EfetuarJogada(teclado, tabuleiro, computador);
+                EfetuarJogadaComputador(jogador, tabuleiro, computador);
                 vencedor = VerificarVitoria(tabuleiro, jogador, computador);
             } 
             while(vencedor == false);
@@ -57,11 +57,11 @@ public class TrabalhoFinalJava
     /* Método de criação e alimentação da Matriz com valores "B" */
     public void DefinirTabuleiro(char[][] tabuleiro) 
     {
-        for (int y = 0; y < 6; y++) 
+        for (int i = 0; i < 6; i++) 
         {
-            for (int w = 0; w < 7; w++) 
+            for (int j = 0; j < 7; j++) 
             {
-                tabuleiro[y][w] = '.';
+                tabuleiro[i][j] = 'B';
             }
         }
     }
@@ -69,15 +69,15 @@ public class TrabalhoFinalJava
     /* Método de Impressão do Tabuleiro contendo a numeração das colunas */
     public void ImprimirTabuleiro(char[][] tabuleiro) 
     {
-        for (int x = 0; x < 6; x++) 
+        for (int i = 0; i < 6; i++) 
         {
-            if (x > 0) 
+            if (i > 0) 
             {
                 System.out.println();
             }
-            for (int y = 0; y < 7; y++) 
+            for (int j = 0; j < 7; j++) 
             {
-                System.out.print(tabuleiro[x][y] + " ");
+                System.out.print(tabuleiro[i][j] + " ");
             }
         }
         System.out.println("\n-------------\n0 1 2 3 4 5 6");
@@ -118,43 +118,7 @@ public class TrabalhoFinalJava
         System.out.println();
 
         return cor;
-    }
-
-    /* Método de validação de espaços vazios nas colunas */
-    public int VerificarEspaco(char[][] tabuleiro, int coluna) 
-    {
-        int espaço = 0;
-        for (int y = 0; y < 6; y++) 
-        {
-            if (tabuleiro[y][coluna] != '.') 
-            {
-                espaço = y - 1;
-                break;
-            }
-            else 
-            {
-                espaço = 5;
-            }
-        }
-
-        return espaço;
-    }
-
-    /* Método para verificar se determinada coluna já foi completamente preenchida */
-    public boolean VerificaColunaPreenchida(char[][] tabuleiro, int coluna)
-    {
-        boolean espaçoOcupado = false;
-        if (tabuleiro[0][coluna] == '.') 
-        {
-            espaçoOcupado = false;
-        } 
-        else 
-        {
-            espaçoOcupado = true;
-        }
-
-        return espaçoOcupado;
-    }
+    }    
 
     /* Método de ação da jogada */
     public void EfetuarJogada(Scanner teclado, char[][] tabuleiro, char jogador) 
@@ -162,22 +126,33 @@ public class TrabalhoFinalJava
 
         System.out.println("Escolha um número de 0 a 6 para fazer uma jogada:");
 
-        int coluna = teclado.nextInt();
+        int coluna = 0;
+        String jogada = "";
+        char jogadaNumero = ' ';
+        
+
         boolean jogadaValida = true;
 
         do 
-        {
-            if (coluna < 0 || coluna > 6) 
+        {        
+            jogada = teclado.next();
+            jogadaNumero = jogada.charAt(0);    
+
+            while((jogada.length() != 1) || (jogadaNumero != '0' && jogadaNumero != '1' && jogadaNumero != '2' && jogadaNumero != '3' && jogadaNumero != '4' && jogadaNumero != '5' && jogadaNumero != '6'))
             {
-                System.out.println("Insira um número de 0 a 6");
-                coluna = teclado.nextInt();
+                System.out.println("Favor insira somente um único número entre 0 e 6:");                    
+                
+                jogada = teclado.next();
+                jogadaNumero = jogada.charAt(0);
             }
+
+            coluna = Integer.parseInt(jogada);
 
             boolean espaçoOcupado = VerificaColunaPreenchida(tabuleiro, coluna);
 
-            if (espaçoOcupado == true) {
+            if (espaçoOcupado == true) 
+            {
                 System.out.println("Não há espaço na coluna escolhida, escolha outra:");
-                coluna = teclado.nextInt();
             }
             else 
             {
@@ -189,6 +164,7 @@ public class TrabalhoFinalJava
         int espaço = VerificarEspaco(tabuleiro, coluna);
 
         tabuleiro[espaço][coluna] = jogador;
+
         ImprimirTabuleiro(tabuleiro);
         System.out.println();
     }
@@ -219,23 +195,59 @@ public class TrabalhoFinalJava
         System.out.println();
     }    
 
+    /* Método de validação de espaços vazios nas colunas */
+    public int VerificarEspaco(char[][] tabuleiro, int coluna) 
+    {
+        int espaço = 0;
+        for (int i = 0; i < 6; i++) 
+        {
+            if (tabuleiro[i][coluna] != 'B') 
+            {
+                espaço = i - 1;
+                break;
+            }
+            else 
+            {
+                espaço = 5;
+            }
+        }
+
+        return espaço;
+    }
+
+    /* Método para verificar se determinada coluna já foi completamente preenchida */
+    public boolean VerificaColunaPreenchida(char[][] tabuleiro, int coluna)
+    {
+        boolean espaçoOcupado = false;
+        if (tabuleiro[0][coluna] == 'B') 
+        {
+            espaçoOcupado = false;
+        } 
+        else 
+        {
+            espaçoOcupado = true;
+        }
+
+        return espaçoOcupado;
+    }
+
     /* Método de verificação de vitória */
     public boolean VerificarVitoria(char[][] tabuleiro, char jogador, char computador) 
     {
         boolean vencedor = true; 
     
         /* Verificação de vitória na horizontal */
-        for(int y = 0; y <= 5; y++) 
+        for(int i = 0; i <= 5; i++) 
         {
-            for(int w = 0; w <= 3; w++) 
+            for(int j = 0; j <= 3; j++) 
             {
-                if(tabuleiro[y][w] == jogador && tabuleiro[y][w + 1] == jogador && tabuleiro[y][w + 2] == jogador && tabuleiro[y][w + 3] == jogador) 
+                if(tabuleiro[i][j] == jogador && tabuleiro[i][j + 1] == jogador && tabuleiro[i][j + 2] == jogador && tabuleiro[i][j + 3] == jogador) 
                 {
                     System.out.println("Você venceu!");
                     vencedor = true;
                     return vencedor;
                 }
-                if(tabuleiro[y][w] == computador && tabuleiro[y][w + 1] == computador && tabuleiro[y][w + 2] == computador && tabuleiro[y][w + 3] == computador) 
+                if(tabuleiro[i][j] == computador && tabuleiro[i][j + 1] == computador && tabuleiro[i][j + 2] == computador && tabuleiro[i][j + 3] == computador) 
                 {
                     System.out.println("Computador venceu!");
                     vencedor = true;
@@ -249,17 +261,17 @@ public class TrabalhoFinalJava
         }
     
         /* Verificação de vitória na vertical */
-        for(int y = 0; y <= 6; y++) 
+        for(int i = 0; i <= 6; i++) 
         {
-            for(int w = 0; w <= 2; w++) 
+            for(int j = 0; j <= 2; j++) 
             {
-                if(tabuleiro[w][y] == jogador && tabuleiro[w + 1][y] == jogador && tabuleiro[w + 2][y] == jogador && tabuleiro[w + 3][y] == jogador) 
+                if(tabuleiro[j][i] == jogador && tabuleiro[j + 1][i] == jogador && tabuleiro[j + 2][i] == jogador && tabuleiro[j + 3][i] == jogador) 
                 {
                     System.out.println("Você venceu!");
                     vencedor = true;
                     return vencedor;
                 }
-                if(tabuleiro[w][y] == computador && tabuleiro[w + 1][y] == computador && tabuleiro[w + 2][y] == computador && tabuleiro[w + 3][y] == computador) 
+                if(tabuleiro[j][i] == computador && tabuleiro[j + 1][i] == computador && tabuleiro[j + 2][i] == computador && tabuleiro[j + 3][i] == computador) 
                 {
                     System.out.println("Computador venceu!");
                     vencedor = true;
@@ -274,17 +286,17 @@ public class TrabalhoFinalJava
         }
     
         /* Verificação de vitória na diagonal, da esquerda para a direita */
-        for(int y = 0; y < tabuleiro.length - 3; y++) 
+        for(int i = 0; i < tabuleiro.length - 3; i++) 
         {
-            for(int w = 0; w < tabuleiro[y].length - 3; w++) 
+            for(int j = 0; j < tabuleiro[i].length - 3; j++) 
             {
-                if(tabuleiro[y][w] == jogador && tabuleiro[y + 1][w + 1] == jogador && tabuleiro[y + 2][w + 2] == jogador && tabuleiro[y + 3][w + 3] == jogador) 
+                if(tabuleiro[i][j] == jogador && tabuleiro[i + 1][j + 1] == jogador && tabuleiro[i + 2][j + 2] == jogador && tabuleiro[i + 3][j + 3] == jogador) 
                 {
                     System.out.println("Você venceu");
                     vencedor = true;
                     return vencedor;
                 }
-                if(tabuleiro[y][w] == computador && tabuleiro[y + 1][w + 1] == computador && tabuleiro[y + 2][w + 2] == computador && tabuleiro[y + 3][w + 3] == computador) 
+                if(tabuleiro[i][j] == computador && tabuleiro[i + 1][j + 1] == computador && tabuleiro[i + 2][j + 2] == computador && tabuleiro[i + 3][j + 3] == computador) 
                 {
                     System.out.println("Computador venceu!");
                     vencedor = true;
@@ -294,22 +306,21 @@ public class TrabalhoFinalJava
                 {
                     vencedor = false;
                 }
-            }
-    
+            }    
         }
     
         /* Verificação de vitória na diagonal, da direita para a esquerda */
-        for(int y = 0; y < tabuleiro.length - 3; y++) 
+        for(int i = 0; i < tabuleiro.length - 3; i++) 
         {
-            for(int w = 3; w < tabuleiro[y].length - 3; w++) 
+            for(int j = 3; j < tabuleiro[i].length - 3; j++) 
             {
-                if(tabuleiro[y][w] == jogador && tabuleiro[y + 1][w - 1] == jogador && tabuleiro[y + 2][w - 2] == jogador && tabuleiro[y + 3][w - 3] == jogador) 
+                if(tabuleiro[i][j] == jogador && tabuleiro[i + 1][j - 1] == jogador && tabuleiro[i + 2][j - 2] == jogador && tabuleiro[i + 3][j - 3] == jogador) 
                 {
                     System.out.println("Você venceu!");
                     vencedor = true;
                     return vencedor;
                 }
-                if(tabuleiro[y][w] == computador && tabuleiro[y + 1][w - 1] == computador && tabuleiro[y + 2][w - 2] == computador && tabuleiro[y + 3][w - 3] == computador) 
+                if(tabuleiro[i][j] == computador && tabuleiro[i + 1][j - 1] == computador && tabuleiro[i + 2][j - 2] == computador && tabuleiro[i + 3][j - 3] == computador) 
                 {
                     System.out.println("Computador venceu!");
                     vencedor = true;
@@ -324,12 +335,11 @@ public class TrabalhoFinalJava
     
         /* Caso não tenha vitória nas verificações acima, ele varre a matriz analisando se há espaços em branco.
            Se não houver espaços em branco, ele retorna o empate! */
-        for(int y = 0; y <= 5; y++) 
+        for(int i = 0; i <= 5; i++) 
         {
-            for(int w = 0; w <= 6; w++) 
-            {
-    
-                if(tabuleiro[y][w] != '.') 
+            for(int j = 0; j <= 6; j++) 
+            {    
+                if(tabuleiro[i][j] != 'B') 
                 {
                     vencedor = true;
                 }
